@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canlı Araç Takibi</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <style>
+        #map {
+            height: 100vh;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script>
+        // Haritayı oluştur
+        var map = L.map('map').setView([51.505, -0.09], 13); // Haritanın başlangıç noktası
+
+        // OpenStreetMap harita katmanını ekle
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+        }).addTo(map);
+
+        // Araç işaretçisi (marker) oluştur ve haritaya ekle
+        var vehicleMarker = L.marker([51.505, -0.09]).addTo(map);
+
+        // Konum başarıyla alındığında çağrılan fonksiyon
+        function updateLocation(position) {
+            var lat = position.coords.latitude;
+            var lng = position.coords.longitude;
+
+            // İşaretçiyi güncelle
+            vehicleMarker.setLatLng([lat, lng]);
+
+            // Haritanın görünümünü kullanıcı konumuna göre güncelle
+            map.setView([lat, lng], 13);
+        }
+
+        // Hata durumunda çağrılan fonksiyon
+        function handleError(error) {
+            console.error('Konum alınırken hata oluştu:', error.message);
+            alert('Konum alınırken hata oluştu: ' + error.message);
+        }
+
+        // Konum izlemeyi başlat
+        if (navigator.geolocation) {
+            navigator.geolocation.watchPosition(updateLocation, handleError, {
+                enableHighAccuracy: true, // Daha doğru konum verisi için
+                timeout: 5000, // Maksimum bekleme süresi
+                maximumAge: 0 // Geçmiş konum verisi kullanılmaz
+            });
+        } else {
+            alert('Geolocation tarayıcınız tarafından desteklenmiyor.');
+        }
+    </script>
+</body>
+</html>
