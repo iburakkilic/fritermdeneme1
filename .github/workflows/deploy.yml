@@ -1,0 +1,29 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main  # veya master, hangi branch üzerinden dağıtım yapıyorsanız
+
+permissions:
+  id-token: write
+  contents: read
+  pages: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v2
+
+      - name: Build and Deploy
+        run: |
+          echo "Deploying to GitHub Pages"
+          # Eğer build komutlarınız varsa, buraya ekleyin
+          # run: npm run build
+          # run: npm run deploy
